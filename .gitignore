@@ -1,0 +1,42 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+dist-ssr/
+*.tsbuildinfo
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# environment & secrets — NEVER commit real values
+.env
+.env.*
+!.env.example
+supabase/.env
+supabase/functions/.env
+supabase/.temp/
+supabase/.branches/
+*.pem
+*.key
+service-account*.json
+
+# generated / temporary artefacts
+tmp/
+.tmp/
+*.zip
+worker/tmp/
+downloads/
+# PDFs: source documents are copyrighted — never commit them
+*.pdf
+!tests/fixtures/**/*.synthetic.pdf
+
+# logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
