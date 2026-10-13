@@ -1,0 +1,32 @@
+# Optional: run the import worker on a schedule using GitHub Actions instead of
+# a always-on server. Each run processes queued jobs (and resumes interrupted
+# ones) and then exits. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY as
+# repository secrets (Settings → Secrets and variables → Actions).
+name: Import worker
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # every 30 minutes
+  workflow_dispatch: {}
+
+concurrency:
+  group: import-worker
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run worker:once
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          WORKER_ID: github-actions-${{ github.run_id }}
+          CRAWLER_USER_AGENT: MGU-PYQ-Hub/1.0 (+https://github.com/${{ github.repository }})
